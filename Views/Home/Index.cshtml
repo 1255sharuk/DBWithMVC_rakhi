@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<div>
+    <label for="cid" style="font-family:Times New Roman">Country:</label>
+    <select name="countrylist" style="font-family:Times New Roman" id="countrylist" class="form-control">
+        <option value="1" style="font-family:Times New Roman">--select country Name--</option>
+        @foreach (var item in ViewBag.cname)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+</div>
+<div>
+    <label for="sid" style="font-family:Times New Roman">State:</label>
+    <select name="statelist" id="statelist" class="form-control" style="font-family:Times New Roman">
+    </select>
+</div>
+<div>
+    <label for="cityid" style="font-family:Times New Roman">City:</label>
+    <select name="citylist" id="citylist" class="form-control" style="font-family:Times New Roman">
+    </select>
+</div>
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(function () {
+        $("#countrylist").change(function () {
+            var id = $("#countrylist").val();
+            $.ajax({
+                url: '/Home/GetState',
+                type: "GET",
+                data: { id: id },
+                dataType: "json",
+                success: function (data) {
+                    $("#statelist").empty();
+                    $("#statelist").append('<option>--select--</option>');
+                    $.each(data, function (index, item) {
+                        $("#statelist").append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("#statelist").change(function () {
+            var id = $("#statelist").val();
+            $.ajax({
+                url: '/Home/GetCity',
+                type: "GET",
+                data: { id: id },
+                dataType: "json",
+                success: function (data) {
+                    $("#citylist").empty();
+                    $("#citylist").append('<option>--select--</option>');
+                    $.each(data, function (index, item) {
+                        $("#citylist").append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
